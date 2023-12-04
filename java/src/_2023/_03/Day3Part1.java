@@ -79,6 +79,7 @@ public class Day3Part1 {
                     }
 
                     if (isNumberValid) {
+                        System.out.print(currentNumber+", ");
                         sum += Integer.parseInt(currentNumber);
                     }
                     inNumber = false;
