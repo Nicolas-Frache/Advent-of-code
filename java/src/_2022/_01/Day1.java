@@ -5,6 +5,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static java.lang.Integer.parseInt;
 
@@ -18,6 +20,9 @@ public class Day1 {
 
         var sums = new ArrayList<Integer>();
         sums.add(0);
+
+        String line = "This order was placed for QT3000! OK?";
+        Matcher matcher = Pattern.compile("(.*?)(\\d+)(.*)").matcher(line);
 
         while ((ligne = reader.readLine()) != null) {
             if (ligne.isEmpty()) {
