@@ -34,17 +34,23 @@ public class Day5Part2 {
         Long lowestLocation = Long.MAX_VALUE;
         ArrayList<Thread> threads = new ArrayList<>();
         ArrayList<ThreadSolver> threadSolvers = new ArrayList<>();
+        int NUMBER_OF_CUT = 16;
         for (int i = 0; i < seeds.length; i += 2) {
-            var threadSolver = new ThreadSolver(maps, Long.parseLong(seeds[i]), Long.parseLong(seeds[i + 1]));
-            Thread thread = new Thread(threadSolver);
-            threads.add(thread);
-            threadSolvers.add(threadSolver);
-            thread.start();
+            long len = Long.parseLong(seeds[i + 1]);
+            for (int j = 0; j < NUMBER_OF_CUT; j++) {
+                ThreadSolver threadSolver = new ThreadSolver(maps,
+                        Long.parseLong(seeds[i]) + j * (len / NUMBER_OF_CUT),
+                        len/ NUMBER_OF_CUT);
+
+                Thread thread = new Thread(threadSolver);
+                thread.start();
+                threads.add(thread);
+                threadSolvers.add(threadSolver);
+            }
         }
         for (Thread thread : threads) {
             try {
                 thread.join();
-                System.out.println(threadSolvers.get(0).lowestLocation);
                 if (threadSolvers.get(0).lowestLocation < lowestLocation) {
                     lowestLocation = threadSolvers.get(0).lowestLocation;
                 }
@@ -58,7 +64,7 @@ public class Day5Part2 {
         System.out.println("> " + lowestLocation);
 
         long estimatedTime = System.currentTimeMillis() - startTime;
-        System.out.println("Time elapsed : " + estimatedTime/1000.0 + " s");
+        System.out.println("Time elapsed : " + estimatedTime / 1000.0 + " s");
     }
 }
 
