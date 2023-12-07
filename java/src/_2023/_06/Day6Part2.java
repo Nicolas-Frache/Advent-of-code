@@ -7,8 +7,7 @@ import java.util.Arrays;
 
 public class Day6Part2 {
     public static void main(String[] args) throws IOException {
-        String inputFile = "src\\_2023\\_06\\input.txt";
-        BufferedReader reader = new BufferedReader(new FileReader(inputFile));
+        BufferedReader reader = new BufferedReader(new FileReader("src\\_2023\\_06\\input.txt"));
 
         long time = Long.parseLong(Arrays.stream(reader.readLine().split(":")[1].trim().split(" ")).toList()
                 .stream().filter(x -> !x.isEmpty())
