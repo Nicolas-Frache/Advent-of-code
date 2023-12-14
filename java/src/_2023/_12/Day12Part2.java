@@ -22,6 +22,7 @@ public class Day12Part2 {
 
 
     ArrayList<State> toCompute;
+    boolean valueComing;
 
     // ???.### 1,1,3
     private void solve() throws IOException {
@@ -41,27 +42,31 @@ public class Day12Part2 {
 
             toCompute = new ArrayList<>();
             ArrayList<State> newValues;
+            valueComing = seq.contains("#");
 
             long nbSol = 0;
             nbSol += solveStep(seq.toCharArray(), 0, numbers5, false, false, 1);
-            //System.out.println(nbSol);
+            System.out.println(nbSol);
             for (int i = 0; i < 4; i++) {
+                if (i == 3) {
+                    valueComing = false;
+                }
+
                 newValues = toCompute;
                 toCompute = new ArrayList<>();
 
-                //System.out.print("- nb state: " + newValues.size() + "\n");
+                System.out.print("- nb state: " + newValues.size() + "\n");
                 for (var s : newValues) {
-                  //  System.out.println("     - " + s.nbOccurrence + "  | " + s.numbersToProcess.stream().map(a -> "" + a).reduce("", (a, b) -> a + b));
+                    System.out.println("     - " + s.nbOccurrence + "  | " + s.numbersToProcess.stream().map(a -> "" + a).reduce("", (a, b) -> a + b));
                 }
                 for (var num : newValues) {
                     nbSol += num.nbOccurrence * solveStep(("?" + seq).toCharArray(), 0, num.numbersToProcess, num.inSeq, num.needSpace, num.nbOccurrence);
                 }
-                //System.out.println(" -> " + nbSol);
+                System.out.println("   -> " + nbSol);
             }
-            //System.out.println(nbSol);
             total += nbSol;
         }
-        System.out.println("-> " + total);
+        System.out.println("===> " + total);
     }
 
     public void addState(State newState) {
@@ -88,8 +93,12 @@ public class Day12Part2 {
                 addState(new State(new ArrayList<>(toFind), inSeq, needSpace, factor));
                 return 0;
             }
-            return 1;
+            return (valueComing) ? 0 : 1;
         }
+        if(toFind.isEmpty()){
+            return (valueComing) ? 0 : 1;
+        }
+
         if (needSpace) {
             if (toProcess[pos] == '#') return 0;
             return solveStep(toProcess, pos + 1, toFind, false, false, factor);
@@ -97,7 +106,7 @@ public class Day12Part2 {
 
         int nbSol = 0;
         if (inSeq) {
-            if (toProcess[pos] == '.' || toFind.isEmpty()) return 0;
+            if (toProcess[pos] == '.') return 0;
 
             if (toFind.get(0) == 1) {
                 int old = toFind.remove(0);
