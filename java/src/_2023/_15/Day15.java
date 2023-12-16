@@ -19,7 +19,6 @@ class Solver {
         System.out.println("Partie 1: " + Arrays.stream(ligne.split(","))
                 .map(a -> new Lense(a, 0).hashCode()).mapToInt(Integer::intValue).sum());
 
-
         HashMap<Integer, LinkedHashMap<String, Lense>> boxes = new HashMap<>();
         Arrays.stream(ligne.split(",")).forEach(input -> {
             char symbol = '=';
@@ -46,8 +45,7 @@ class Solver {
         boxes.keySet().forEach(keyBox -> {
             AtomicInteger lensIdx = new AtomicInteger();
             boxes.get(keyBox).forEach((keyLens, value) -> {
-                total.addAndGet((1 + keyBox) * (lensIdx.get() + 1) * boxes.get(keyBox).get(keyLens).focalLength);
-                lensIdx.getAndIncrement();
+                total.addAndGet((1 + keyBox) * (lensIdx.getAndIncrement() + 1) * value.focalLength);
             });
         });
         System.out.println("Partie 2: " + total);
