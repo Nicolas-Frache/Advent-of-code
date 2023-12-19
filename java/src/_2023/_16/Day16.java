@@ -13,7 +13,7 @@ class Solver {
     int max = 0;
 
     void solve() throws IOException {
-        BufferedReader reader = new BufferedReader(new FileReader("src\\_2023\\_16\\input.txt"));
+        BufferedReader reader;
         Stream<String> streamReader = new BufferedReader(new FileReader("src\\_2023\\_16\\input.txt")).lines();
         nbLines = (int) streamReader.count() + 2;
         streamReader = new BufferedReader(new FileReader("src\\_2023\\_16\\input.txt")).lines();
@@ -44,7 +44,7 @@ class Solver {
         }
 
         testStart(1, 1, RIGHT);
-        System.out.println("Part 1 : " + Tile.NB_ENERGISED);
+        System.out.println("Part 1 : " + Tile.NB_ENERGIZED);
 
         for (int col = 1; col < nbCol - 2; col++) {
             testStart(1, col, DOWN);
@@ -58,33 +58,32 @@ class Solver {
     }
 
     public void testStart(int l, int c, int direction) {
-        Tile.NB_ENERGISED = 0;
+        Tile.NB_ENERGIZED = 0;
         panel[l][c].travel(panel, direction);
         for (int i = 1; i < nbLines - 1; i++) {
             for (int j = 1; j < nbCol - 1; j++) {
                 panel[i][j].reset();
             }
         }
-        if (Tile.NB_ENERGISED > max) {
-            max = Tile.NB_ENERGISED;
+        if (Tile.NB_ENERGIZED > max) {
+            max = Tile.NB_ENERGIZED;
         }
     }
-
 }
 
 class Tile {
     char symbol;
-    boolean isEnergised;
+    boolean isEnergized;
     int l, c;
     boolean[] traversedByDir = new boolean[4];
-    static int NB_ENERGISED = 0;
+    static int NB_ENERGIZED = 0;
 
     final static int LEFT = 0, RIGHT = 1, TOP = 2, DOWN = 3;
     final static Tile BORDER = new Tile('X', -1, -1);
 
     public Tile(char symbol, int l, int c) {
         this.symbol = symbol;
-        isEnergised = false;
+        isEnergized = false;
         this.l = l;
         this.c = c;
     }
@@ -94,9 +93,9 @@ class Tile {
             return;
         }
         if (!traversedByDir[0] && !traversedByDir[1] && !traversedByDir[2] && !traversedByDir[3]) {
-            Tile.NB_ENERGISED++;
+            Tile.NB_ENERGIZED++;
         }
-        this.isEnergised = true;
+        this.isEnergized = true;
         this.traversedByDir[direction] = true;
 
         int newLine = l;
@@ -147,7 +146,7 @@ class Tile {
     }
 
     public void reset() {
-        this.isEnergised = false;
+        this.isEnergized = false;
         for (int i = 0; i < 4; i++) {
             this.traversedByDir[i] = false;
         }
@@ -156,12 +155,15 @@ class Tile {
 
 public class Day16 {
     public static void main(String[] args) throws IOException {
+        int NB_RUN = 100;
         long startTime = System.currentTimeMillis();
 
-        Solver solver = new Solver();
-        solver.solve();
+        for(int i = 0; i<NB_RUN; i++){
+            Solver solver = new Solver();
+            solver.solve();
+        }
 
         long estimatedTime = System.currentTimeMillis() - startTime;
-        System.out.println("Time elapsed : " + estimatedTime / 1000.0 + " s");
+        System.out.println("Average time for "+ NB_RUN +" run : " + estimatedTime / 1000.0 / NB_RUN + " s");
     }
 }
