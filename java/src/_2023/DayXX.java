@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 class Solver {
-    void solve(ArrayList<String> lines) throws IOException {
+    void solve(ArrayList<String> lines) {
 
     }
 }
