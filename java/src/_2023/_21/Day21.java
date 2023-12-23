@@ -111,8 +111,6 @@ public class Day21 {
             lines.add(s);
         }
         Solver solver = new Solver();
-        //System.out.println(solver.solve(lines, true));
-        //System.out.println(solver.solve(lines, false));
         solver.solve_(lines, true);
         solver.solve_(lines, false);
 
@@ -120,4 +118,3 @@ public class Day21 {
         System.out.println("Time elapsed : " + estimatedTime / 1000.0 + " s");
     }
 }
-
