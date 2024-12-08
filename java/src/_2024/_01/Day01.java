@@ -36,8 +36,10 @@ public class Day01 {
     public static void main(String[] args) throws IOException {
         long startTime = System.currentTimeMillis();
 
+        System.out.println(Day01.class.getClassLoader().getResource("").getPath());
+
         String s;
-        BufferedReader reader = new BufferedReader(new FileReader("_2024\\_01\\input.txt"));
+        BufferedReader reader = new BufferedReader(new FileReader("src\\_2024\\_01\\input.txt"));
         ArrayList<String> lines = new ArrayList<>();
         while ((s = reader.readLine()) != null) {
             lines.add(s);
