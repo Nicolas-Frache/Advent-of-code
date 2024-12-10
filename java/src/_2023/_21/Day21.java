@@ -1,5 +1,7 @@
 package _2023._21;
 
+import utils.ArraysUtils;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -36,7 +38,7 @@ class Solver {
             }
             row++;
         }
-        map = utils.Arrays.extendArray(map, FACTOR);
+        map = ArraysUtils.extendArray(map, FACTOR);
         map[(nbRows * FACTOR / 2) + startRow][(nbRows * FACTOR / 2) + startCol] = 'O';
 
         nbRows = map.length;

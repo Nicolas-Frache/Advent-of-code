@@ -49,11 +49,11 @@ class Solver {
                 continue;
             }
             int j = 0;
-            while(j)
-
+            //while(j)
+            // TO FINISH
         }
 
-
+        return 0;
     }
 
     long solvePart1(int[] disk) {
