@@ -40,5 +40,29 @@ public class ArraysUtils {
         return tableauAvecPadding;
     }
 
+    public static char[][] addPadding(char[][] tableau, int padding, char valeurPadding) {
+        int hauteur = tableau.length;
+        int largeur = tableau[0].length;
+
+        int nouvelleHauteur = hauteur + 2 * padding;
+        int nouvelleLargeur = largeur + 2 * padding;
+
+        char[][] tableauAvecPadding = new char[nouvelleHauteur][nouvelleLargeur];
+
+        // Remplir le tableau avec le padding
+        for (int i = 0; i < nouvelleHauteur; i++) {
+            for (int j = 0; j < nouvelleLargeur; j++) {
+                if (i < padding || i >= hauteur + padding || j < padding || j >= largeur + padding) {
+                    tableauAvecPadding[i][j] = valeurPadding;
+                } else {
+                    tableauAvecPadding[i][j] = tableau[i - padding][j - padding];
+                }
+            }
+        }
+
+        return tableauAvecPadding;
+    }
+
+
 
 }
