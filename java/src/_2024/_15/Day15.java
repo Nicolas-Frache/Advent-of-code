@@ -7,12 +7,33 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.IntStream;
+
+enum Tile {
+    EMPTY, WALL, ROBOT, BOX, BOX_L, BOX_R;
+
+    static Function<String, Tile> getConverter() {
+        return s -> switch (s) {
+            case "#" -> Tile.WALL;
+            case "@" -> Tile.ROBOT;
+            case "O" -> Tile.BOX;
+            case "[" -> Tile.BOX_L;
+            case "]" -> Tile.BOX_R;
+            default -> Tile.EMPTY;
+        };
+    }
+}
 
 class Solver {
     Grid<Tile> grid;
     ArrayList<Character> moves;
+
+    private static final Map<Character, Dir> DIRECTION_MAP = Map.of(
+            '^', Dir.T, 'v', Dir.B, '<', Dir.L, '>', Dir.R
+    );
+
     void solve(ArrayList<String> lines) {
         ArrayList<String> mapInput = new ArrayList<>();
         int i = 0;
@@ -24,73 +45,109 @@ class Solver {
 
         moves = new ArrayList<>();
         i++;
-        while(i < lines.size() && !lines.get(i).isEmpty()) {
+        while (i < lines.size() && !lines.get(i).isEmpty()) {
             int finalI = i;
             IntStream.range(0, lines.get(i).length()).forEachOrdered(j -> moves.add(lines.get(finalI).charAt(j)));
             i++;
         }
 
-        solvep1();
+        solveP1();
+        System.out.println(getScore());
+
+        // Partie 2
+        mapInput = new ArrayList<>();
+        i = 0;
+        while (!lines.get(i).isEmpty()) {
+            mapInput.add(lines.get(i)
+                    .replaceAll("\\.", "..")
+                    .replaceAll("#", "##")
+                    .replaceAll("O", "[]")
+                    .replaceAll("@", "@."));
+            i++;
+        }
+        grid = new Grid<>(mapInput, "", Tile.getConverter());
+
+        solveP2();
         System.out.println(getScore());
     }
 
-    void solvep1(){
+    void solveP1() {
         var robotCell = grid.map.values().stream().filter(c -> c.value == Tile.ROBOT).findFirst().get();
-        for(Character dirc : moves){
-            Dir dir = switch(dirc){
-                case '^' -> Dir.T;
-                case 'v' -> Dir.B;
-                case '<' -> Dir.L;
-                default ->  Dir.R;
-            };
-            var neig = robotCell.getDir(dir);
-
-            if(neig.value == Tile.WALL){
-                continue;
+        for (Character dirc : moves) {
+            Dir dir = DIRECTION_MAP.get(dirc);
+            if (moveP1(robotCell, dir)) {
+                robotCell = robotCell.getDir(dir);
             }
-            if(neig.value == Tile.EMPTY){
-                grid.switchCellValues(robotCell, neig);
-                robotCell = neig;
-                continue;
-            }
-
-            var farthestBox = neig;
-            var limit = farthestBox.getDir(dir);
-            while(limit.value == Tile.BOX){
-                farthestBox = limit;
-                limit = farthestBox.getDir(dir);
-            }
-            if(limit.value == Tile.WALL){
-                continue;
-            }
-            limit.value = Tile.BOX;
-            neig.value = Tile.ROBOT;
-            robotCell.value = Tile.EMPTY;
-
-            robotCell = neig;
         }
     }
 
-    int getScore(){
-        return grid.map.values().stream()
-                .filter(c -> c.value == Tile.BOX)
-                .mapToInt(c -> c.pos.x + 100*c.pos.y)
-                .sum();
+    boolean moveP1(Grid<Tile>.Cell cell, Dir dir) {
+        if (cell.value == Tile.EMPTY) {
+            return true;
+        }
+        if (cell.value == Tile.WALL) {
+            return false;
+        }
+        var target = cell.getDir(dir);
+        if (moveP1(target, dir)) {
+            grid.switchCellValues(cell, target);
+            return true;
+        }
+        return false;
     }
 
-}
+    void solveP2() {
+        var robotCell = grid.map.values().stream().filter(c -> c.value == Tile.ROBOT).findFirst().get();
+        for (Character dirc : moves) {
+            Dir dir = DIRECTION_MAP.get(dirc);
+            var target = robotCell.getDir(dir);
+            if (canMoveP2(target, dir)) {
+                moveP2(target, dir);
+                grid.switchCellValues(robotCell, target);
+                robotCell = target;
+            }
+        }
+    }
 
-enum Tile{
-    EMPTY, WALL, ROBOT, BOX;
+    boolean canMoveP2(Grid<Tile>.Cell cell, Dir dir) {
+        if (cell.value == Tile.EMPTY) {
+            return true;
+        }
+        if (cell.value == Tile.WALL) {
+            return false;
+        }
+        var target = cell.getDir(dir);
+        var dirOtherPart = (cell.value == Tile.BOX_L) ? Dir.R : Dir.L;
+        var otherPartTarget = cell.getDir(dirOtherPart).getDir(dir);
 
-    static Function<String, Tile> getConverter(){
-        return s -> switch (s) {
-            case "." -> Tile.EMPTY;
-            case "#" -> Tile.WALL;
-            case "@" -> Tile.ROBOT;
-            default -> Tile.BOX;
-        };
-    };
+        if (dir == Dir.T || dir == Dir.B) { // Déplacement vertical : on essaie de bouger les deux morceaux
+            return canMoveP2(otherPartTarget, dir) && canMoveP2(target, dir);
+        }
+        return canMoveP2(otherPartTarget, dir); // Horizontal : Seulement celui à l'extremité
+    }
+
+    void moveP2(Grid<Tile>.Cell cell, Dir dir) {
+        if (cell.value == Tile.EMPTY) {
+            return;
+        }
+        var otherPart = cell.getDir((cell.value == Tile.BOX_L) ? Dir.R : Dir.L);
+        var target1 = cell.getDir(dir);
+        var target2 = otherPart.getDir(dir);
+
+        if(dir == Dir.T || dir == Dir.B){ // On bouge devant le premier morceau uniquement si déplacement vertical
+            moveP2(target1, dir);
+        }
+        moveP2(target2, dir);
+        grid.switchCellValues(otherPart, target2);
+        grid.switchCellValues(cell, target1);
+    }
+
+    int getScore() {
+        return grid.map.values().stream()
+                .filter(c -> c.value == Tile.BOX || c.value == Tile.BOX_L)
+                .mapToInt(c -> c.pos.x + 100 * c.pos.y)
+                .sum();
+    }
 }
 
 public class Day15 {
