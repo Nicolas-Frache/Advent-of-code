@@ -26,7 +26,7 @@ class Solver {
             }
             linesList.add(column);
         }
-        grid = new Grid<>(linesList);
+        grid = new Grid<ArrayList<Robot>>(linesList);
 
 
         var pattern = Pattern.compile("p=(-?\\d+),(-?\\d+) v=(-?\\d+),(-?\\d+).*");

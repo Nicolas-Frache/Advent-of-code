@@ -1,32 +1,25 @@
 package utils;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class Grid<T> {
     public HashMap<Point, Cell> map;
+    public int height, width;
 
-    public Grid(){
+    public Grid() {
         map = new HashMap<>();
     }
-    public Grid(T[][] array2d) {
-        map = new HashMap<>();
-        for (int i = 0; i < array2d.length; i++) {
-            for (int j = 0; j < array2d[i].length; j++) {
-                var pos = new Point(j, i);
-                map.put(pos, new Cell(array2d[i][j], pos));
-            }
-        }
+
+    public Grid(T defaultValue, int width, int height) {
+        this(new ArrayList<>(Collections.nCopies(height, new ArrayList<>(Collections.nCopies(width, defaultValue)))));
     }
 
     public Grid(ArrayList<String> lines, String separator, Function<String, T> converter) {
         ArrayList<ArrayList<T>> convertedLines = new ArrayList<>();
-        for(var line : lines) {
+        for (var line : lines) {
             convertedLines.add(Arrays.stream(line.split(separator))
                     .map(converter).collect(Collectors.toCollection(ArrayList::new)));
         }
@@ -38,29 +31,56 @@ public class Grid<T> {
         this(lines, separator, converter);
     }
 
-    public Grid(ArrayList<T[]> listOfArrays, boolean a) {
+    // ----------
+
+    public Grid(T[][] array2d) {
         map = new HashMap<>();
-        for (int i = 0; i < listOfArrays.size(); i++) {
-            for (int j = 0; j < listOfArrays.get(i).length; j++) {
+        height = array2d.length;
+        width = array2d[0].length;
+        for (int i = 0; i < array2d.length; i++) {
+            for (int j = 0; j < array2d[i].length; j++) {
                 var pos = new Point(j, i);
-                map.put(pos, new Cell(listOfArrays.get(i)[j], pos));
+                map.put(pos, new Cell(array2d[i][j], pos));
             }
         }
     }
 
-    public Grid(ArrayList<ArrayList<T>> listOfArrays) {
+
+    public Grid(ArrayList<T[]> listOfLinesArray, boolean a) {
         map = new HashMap<>();
-        for (int i = 0; i < listOfArrays.size(); i++) {
-            for (int j = 0; j < listOfArrays.get(i).size(); j++) {
+        height = listOfLinesArray.size();
+        width = listOfLinesArray.get(0).length;
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
                 var pos = new Point(j, i);
-                map.put(pos, new Cell(listOfArrays.get(i).get(j), pos));
+                map.put(pos, new Cell(listOfLinesArray.get(i)[j], pos));
             }
         }
     }
+
+    public Grid(ArrayList<ArrayList<T>> listOfLines) {
+        map = new HashMap<>();
+        height = listOfLines.size();
+        width = listOfLines.getFirst().size();
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
+                var pos = new Point(j, i);
+                map.put(pos, new Cell(listOfLines.get(i).get(j), pos));
+            }
+        }
+    }
+
+    // ----------
 
     @Override
     public String toString() {
         return "TODO";
+    }
+
+    public void switchCellValues(Cell a, Cell b){
+        var tmp = a.value;
+        a.value = b.value;
+        b.value = tmp;
     }
 
     public class Cell {
@@ -106,7 +126,7 @@ public class Grid<T> {
             return neighbors;
         }
 
-        public Cell getDir(Dir dir){
+        public Cell getDir(Dir dir) {
             Point newPos = switch (dir) {
                 case L -> new Point(pos.x - 1, pos.y);
                 case R -> new Point(pos.x + 1, pos.y);
@@ -127,10 +147,6 @@ public class Grid<T> {
         }
     }
 
-    public enum Dir {
-        L, R, T, B, TL, TR, BL, BR
-    }
-
     @SuppressWarnings("unchecked")
     private T convertToType(String value, Class<T> clazz) {
         return switch (clazz.getSimpleName()) {
@@ -147,7 +163,7 @@ public class Grid<T> {
     }
 }
 
-class TypeConverter<T>{
+class TypeConverter<T> {
     private static final Map<Class<?>, Function<String, ?>> CONVERTERS = new HashMap<>();
 
     static {
@@ -168,8 +184,6 @@ class TypeConverter<T>{
         return (Function<String, T>) converter;
     }
 }
-
-
 
 
 
