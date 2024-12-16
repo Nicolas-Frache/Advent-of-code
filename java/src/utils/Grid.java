@@ -3,6 +3,7 @@ package utils;
 import java.awt.*;
 import java.util.*;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class Grid<T> {
@@ -74,21 +75,49 @@ public class Grid<T> {
 
     @Override
     public String toString() {
-        return "TODO";
+        StringBuilder s = new StringBuilder();
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
+                s.append(get(j, i));
+            }
+            s.append("\n");
+        }
+        return s.toString();
     }
 
     public void switchCellValues(Cell a, Cell b){
-        var tmp = a.value;
-        a.value = b.value;
-        b.value = tmp;
+        var tmp = a.val;
+        a.val = b.val;
+        b.val = tmp;
     }
 
+    public Cell get(int x, int y){
+        return map.get(new Point(x, y));
+    }
+
+    public T getVal(int x, int y){
+        return get(x, y).val;
+    }
+
+    public Cell getFirstCell(Predicate<? super Cell> p){
+        var res = map.values().stream().filter(p).findFirst();
+        if(res.isEmpty()){
+            throw new NoSuchElementException();
+        }
+        return res.get();
+    }
+
+    public ArrayList<Cell> getCells(Predicate<? super Cell> p){
+        return map.values().stream().filter(p).collect(Collectors.toCollection(ArrayList::new));
+    }
+
+
     public class Cell {
-        public T value;
+        public T val;
         public Point pos;
 
         public Cell(T value, Point pos) {
-            this.value = value;
+            this.val = value;
             this.pos = pos;
         }
 
@@ -143,23 +172,21 @@ public class Grid<T> {
 
         @Override
         public String toString() {
-            return value.toString();
+            return val.toString();
         }
-    }
 
-    @SuppressWarnings("unchecked")
-    private T convertToType(String value, Class<T> clazz) {
-        return switch (clazz.getSimpleName()) {
-            case "Integer" -> (T) Integer.valueOf(value.trim());
-            case "Double" -> (T) Double.valueOf(value.trim());
-            case "Long" -> (T) Long.valueOf(value.trim());
-            case "Boolean" -> (T) Boolean.valueOf(value.trim());
-            case "String" -> (T) value;
-            case "Character" -> (T) Character.valueOf(value.trim().charAt(0));
-            default -> throw new IllegalArgumentException(
-                    "Type non supporté: " + clazz.getSimpleName()
-            );
-        };
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Cell cell = (Cell) o;
+            return Objects.equals(pos, cell.pos);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hashCode(pos);
+        }
     }
 }
 
@@ -184,10 +211,3 @@ class TypeConverter<T> {
         return (Function<String, T>) converter;
     }
 }
-
-
-
-
-
-
-

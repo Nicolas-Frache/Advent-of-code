@@ -72,7 +72,7 @@ class Solver {
     }
 
     void solveP1() {
-        var robotCell = grid.map.values().stream().filter(c -> c.value == Tile.ROBOT).findFirst().get();
+        var robotCell = grid.getFirstCell(c -> c.val == Tile.ROBOT);
         for (Character dirc : moves) {
             Dir dir = DIRECTION_MAP.get(dirc);
             if (moveP1(robotCell, dir)) {
@@ -82,10 +82,10 @@ class Solver {
     }
 
     boolean moveP1(Grid<Tile>.Cell cell, Dir dir) {
-        if (cell.value == Tile.EMPTY) {
+        if (cell.val == Tile.EMPTY) {
             return true;
         }
-        if (cell.value == Tile.WALL) {
+        if (cell.val == Tile.WALL) {
             return false;
         }
         var target = cell.getDir(dir);
@@ -97,7 +97,7 @@ class Solver {
     }
 
     void solveP2() {
-        var robotCell = grid.map.values().stream().filter(c -> c.value == Tile.ROBOT).findFirst().get();
+        var robotCell = grid.getFirstCell(c -> c.val == Tile.ROBOT);
         for (Character dirc : moves) {
             Dir dir = DIRECTION_MAP.get(dirc);
             var target = robotCell.getDir(dir);
@@ -110,14 +110,14 @@ class Solver {
     }
 
     boolean canMoveP2(Grid<Tile>.Cell cell, Dir dir) {
-        if (cell.value == Tile.EMPTY) {
+        if (cell.val == Tile.EMPTY) {
             return true;
         }
-        if (cell.value == Tile.WALL) {
+        if (cell.val == Tile.WALL) {
             return false;
         }
         var target = cell.getDir(dir);
-        var dirOtherPart = (cell.value == Tile.BOX_L) ? Dir.R : Dir.L;
+        var dirOtherPart = (cell.val == Tile.BOX_L) ? Dir.R : Dir.L;
         var otherPartTarget = cell.getDir(dirOtherPart).getDir(dir);
 
         if (dir == Dir.T || dir == Dir.B) { // Déplacement vertical : on essaie de bouger les deux morceaux
@@ -127,10 +127,10 @@ class Solver {
     }
 
     void moveP2(Grid<Tile>.Cell cell, Dir dir) {
-        if (cell.value == Tile.EMPTY) {
+        if (cell.val == Tile.EMPTY) {
             return;
         }
-        var otherPart = cell.getDir((cell.value == Tile.BOX_L) ? Dir.R : Dir.L);
+        var otherPart = cell.getDir((cell.val == Tile.BOX_L) ? Dir.R : Dir.L);
         var target1 = cell.getDir(dir);
         var target2 = otherPart.getDir(dir);
 
@@ -143,8 +143,7 @@ class Solver {
     }
 
     int getScore() {
-        return grid.map.values().stream()
-                .filter(c -> c.value == Tile.BOX || c.value == Tile.BOX_L)
+        return grid.getCells(c -> c.val == Tile.BOX || c.val == Tile.BOX_L).stream()
                 .mapToInt(c -> c.pos.x + 100 * c.pos.y)
                 .sum();
     }

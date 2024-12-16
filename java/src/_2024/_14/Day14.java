@@ -34,7 +34,7 @@ class Solver {
             Matcher matcher = pattern.matcher(line);
             matcher.find();
             Point pos = new Point(Integer.parseInt(matcher.group(1)), Integer.parseInt(matcher.group(2)));
-            grid.map.get(pos).value.add(
+            grid.map.get(pos).val.add(
                     new Robot(Integer.parseInt(matcher.group(3)), Integer.parseInt(matcher.group(4)), 0));
         }
 
@@ -65,7 +65,7 @@ class Solver {
         for (int i = 0; i < nblines; i++) {
             System.out.println();
             for (int j = 0; j < nbCols; j++) {
-                System.out.print((!grid.map.get(new Point(j, i)).value.isEmpty()) ? "█" : ".");
+                System.out.print((!grid.map.get(new Point(j, i)).val.isEmpty()) ? "█" : ".");
             }
         }
         System.out.println("========");
@@ -73,17 +73,17 @@ class Solver {
 
     void moveAllRobots(int currentSecond) {
         for (var cell : grid.map.values()) {
-            var robots = cell.value;
+            var robots = cell.val;
             for (int i = robots.size() - 1; i >= 0; i--) {
                 if (robots.get(i).lastMoved == currentSecond) {
                     continue;
                 }
-                Robot robot = cell.value.remove(i);
+                Robot robot = cell.val.remove(i);
                 robot.lastMoved = currentSecond;
                 var newPos = new Point((cell.pos.x + robot.dx) % nbCols, (cell.pos.y + robot.dy) % nblines);
                 newPos.x = (newPos.x < 0) ? nbCols + newPos.x : newPos.x;
                 newPos.y = (newPos.y < 0) ? nblines + newPos.y : newPos.y;
-                grid.map.get(newPos).value.add(robot);
+                grid.map.get(newPos).val.add(robot);
             }
         }
     }
@@ -92,7 +92,7 @@ class Solver {
         int sum = 0;
         for (int i = x0; i <= x1; i++) {
             for (int j = y0; j <= y1; j++) {
-                sum += grid.map.get(new Point(i, j)).value.size();
+                sum += grid.map.get(new Point(i, j)).val.size();
             }
         }
         return sum;
