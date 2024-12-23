@@ -170,6 +170,14 @@ public class Grid<T> {
             return map.get(newPos);
         }
 
+        public int x(){
+            return pos.x;
+        }
+
+        public int y(){
+            return pos.y;
+        }
+
         @Override
         public String toString() {
             return val.toString();
