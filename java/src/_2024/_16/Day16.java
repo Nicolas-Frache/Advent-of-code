@@ -2,9 +2,9 @@ package _2024._16;
 
 import utils.Dir;
 import utils.Grid;
+import utils.ISolver;
+import utils.PuzzleRunner;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -46,8 +46,8 @@ class Tile implements Comparable<Tile> {
     }
 }
 
-class Solver {
-    void solve(ArrayList<String> lines) {
+class Solver implements ISolver {
+    public void solve(ArrayList<String> lines) {
         Grid<Tile> grid = new Grid<>(lines, "", Tile.getConverter());
         Grid<Tile>.Cell target = grid.getFirstCell(c -> c.val.type == TileTypes.END);
         Grid<Tile>.Cell start = grid.getFirstCell(c -> c.val.type == TileTypes.START);
@@ -115,21 +115,8 @@ class Solver {
     }
 }
 
-
 public class Day16 {
-    public static void main(String[] args) throws IOException {
-        long startTime = System.currentTimeMillis();
-
-        String s;
-        BufferedReader reader = new BufferedReader(new FileReader("src\\_2024\\_16\\input.txt"));
-        ArrayList<String> lines = new ArrayList<>();
-        while ((s = reader.readLine()) != null) {
-            lines.add(s);
-        }
-        Solver solver = new Solver();
-        solver.solve(lines);
-
-        long estimatedTime = System.currentTimeMillis() - startTime;
-        System.out.println("Time elapsed : " + estimatedTime / 1000.0 + " s");
+    public static void main() throws IOException {
+        PuzzleRunner.Launch(2024, 16, new Solver());
     }
 }

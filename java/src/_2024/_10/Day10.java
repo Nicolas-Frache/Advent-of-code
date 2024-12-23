@@ -1,17 +1,18 @@
 package _2024._10;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
+import utils.ISolver;
+import utils.PuzzleRunner;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 import static utils.ArraysUtils.addPadding;
 
-class Solver {
+class Solver implements ISolver {
     int[][] grid;
 
-    void solve(ArrayList<String> lines) {
+    public void solve(ArrayList<String> lines) {
         var arrayInput = new int[lines.size()][];
         int i = 0;
         for (String line : lines) {
@@ -56,19 +57,7 @@ class Solver {
 
 
 public class Day10 {
-    public static void main(String[] args) throws IOException {
-        long startTime = System.currentTimeMillis();
-
-        String s;
-        BufferedReader reader = new BufferedReader(new FileReader("src\\_2024\\_10\\input.txt"));
-        ArrayList<String> lines = new ArrayList<>();
-        while ((s = reader.readLine()) != null) {
-            lines.add(s);
-        }
-        Solver solver = new Solver();
-        solver.solve(lines);
-
-        long estimatedTime = System.currentTimeMillis() - startTime;
-        System.out.println("Time elapsed : " + estimatedTime / 1000.0 + " s");
+    public static void main() throws IOException {
+        PuzzleRunner.Launch(2024, 10, new Solver());
     }
 }

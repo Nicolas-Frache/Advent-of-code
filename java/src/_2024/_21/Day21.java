@@ -2,9 +2,9 @@ package _2024._21;
 
 import utils.Dir;
 import utils.Grid;
+import utils.ISolver;
+import utils.PuzzleRunner;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,8 +12,8 @@ import java.util.List;
 import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
 
-class Solver {
-    void solve(ArrayList<String> lines) {
+class Solver implements ISolver {
+    public void solve(ArrayList<String> lines) {
         Controller keypad, remote1, remote2;
 
         ArrayList<String> tmp = new ArrayList<>(List.of(new String[]{"789", "456", "123", ".0A"}));
@@ -105,21 +105,8 @@ class Controller {
     }
 }
 
-
 public class Day21 {
-    public static void main(String[] args) throws IOException {
-        long startTime = System.currentTimeMillis();
-
-        String s;
-        BufferedReader reader = new BufferedReader(new FileReader("src\\_2024\\_21\\input.txt"));
-        ArrayList<String> lines = new ArrayList<>();
-        while ((s = reader.readLine()) != null) {
-            lines.add(s);
-        }
-        Solver solver = new Solver();
-        solver.solve(lines);
-
-        long estimatedTime = System.currentTimeMillis() - startTime;
-        System.out.println("Time elapsed : " + estimatedTime / 1000.0 + " s");
+    public static void main() throws IOException {
+        PuzzleRunner.Launch(2024, 21, new Solver());
     }
 }

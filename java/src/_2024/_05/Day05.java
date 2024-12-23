@@ -1,24 +1,21 @@
 package _2024._05;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
+import utils.ISolver;
+import utils.PuzzleRunner;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 record Rule(int a, int b) {
 }
 
-class Solver {
+class Solver implements ISolver {
     ArrayList<ArrayList<Integer>> updates = new ArrayList<>();
     ArrayList<Rule> rules = new ArrayList<>();
-    void solve(ArrayList<String> lines) {
 
-
+    public void solve(ArrayList<String> lines) {
         int i = 0;
         while (!lines.get(i).isBlank()) {
             var vals = Arrays.stream(lines.get(i).split("\\|")).mapToInt(Integer::parseInt).toArray();
@@ -37,7 +34,7 @@ class Solver {
         for (var update : updates) {
             if (isValidUpdate(update)) {
                 sum += update.get((int) Math.floor((float) (update.size() / 2)));
-            } else{
+            } else {
 
             }
         }
@@ -45,7 +42,7 @@ class Solver {
 
     }
 
-    boolean isValidUpdate(ArrayList<Integer> update){
+    boolean isValidUpdate(ArrayList<Integer> update) {
         for (int idx = 0; idx < update.size(); idx++) {
             int finalIdx = idx;
             var leftRules = rules.stream().filter(r -> r.a() == update.get(finalIdx)).toList();
@@ -63,21 +60,8 @@ class Solver {
     }
 }
 
-
 public class Day05 {
-    public static void main(String[] args) throws IOException {
-        long startTime = System.currentTimeMillis();
-
-        String s;
-        BufferedReader reader = new BufferedReader(new FileReader("src\\_2024\\_05\\input.txt"));
-        ArrayList<String> lines = new ArrayList<>();
-        while ((s = reader.readLine()) != null) {
-            lines.add(s);
-        }
-        Solver solver = new Solver();
-        solver.solve(lines);
-
-        long estimatedTime = System.currentTimeMillis() - startTime;
-        System.out.println("Time elapsed : " + estimatedTime / 1000.0 + " s");
+    public static void main() throws IOException {
+        PuzzleRunner.Launch(2024, 5, new Solver());
     }
 }

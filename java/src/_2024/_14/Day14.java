@@ -1,20 +1,20 @@
 package _2024._14;
 
 import utils.Grid;
+import utils.ISolver;
+import utils.PuzzleRunner;
 
 import java.awt.*;
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-class Solver {
+class Solver implements ISolver {
     Grid<ArrayList<Robot>> grid;
     int nblines, nbCols;
 
-    void solve(ArrayList<String> lines) {
+    public void solve(ArrayList<String> lines) {
         nblines = 103;
         nbCols = 101;
 
@@ -110,19 +110,7 @@ class Robot {
 }
 
 public class Day14 {
-    public static void main(String[] args) throws IOException {
-        long startTime = System.currentTimeMillis();
-
-        String s;
-        BufferedReader reader = new BufferedReader(new FileReader("src\\_2024\\_14\\input.txt"));
-        ArrayList<String> lines = new ArrayList<>();
-        while ((s = reader.readLine()) != null) {
-            lines.add(s);
-        }
-        Solver solver = new Solver();
-        solver.solve(lines);
-
-        long estimatedTime = System.currentTimeMillis() - startTime;
-        System.out.println("Time elapsed : " + estimatedTime / 1000.0 + " s");
+    public static void main() throws IOException {
+        PuzzleRunner.Launch(2024, 14, new Solver());
     }
 }

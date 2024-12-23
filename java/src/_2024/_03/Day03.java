@@ -1,5 +1,8 @@
 package _2024._03;
 
+import utils.ISolver;
+import utils.PuzzleRunner;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -9,8 +12,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-class Solver {
-    void solve(ArrayList<String> lines) {
+class Solver implements ISolver {
+    public void solve(ArrayList<String> lines) {
         int sum = 0;
         var doList = new ArrayList<String>();
         Pattern pattern = Pattern.compile("mul\\((\\d+),(\\d+)\\)");
@@ -28,21 +31,8 @@ class Solver {
     }
 }
 
-
 public class Day03 {
-    public static void main(String[] args) throws IOException {
-        long startTime = System.currentTimeMillis();
-
-        String s;
-        BufferedReader reader = new BufferedReader(new FileReader("src\\_2024\\_03\\input.txt"));
-        ArrayList<String> lines = new ArrayList<>();
-        while ((s = reader.readLine()) != null) {
-            lines.add(s);
-        }
-        Solver solver = new Solver();
-        solver.solve(lines);
-
-        long estimatedTime = System.currentTimeMillis() - startTime;
-        System.out.println("Time elapsed : " + estimatedTime / 1000.0 + " s");
+    public static void main() throws IOException {
+        PuzzleRunner.Launch(2024, 3, new Solver());
     }
 }

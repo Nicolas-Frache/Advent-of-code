@@ -2,9 +2,9 @@ package _2024._15;
 
 import utils.Dir;
 import utils.Grid;
+import utils.ISolver;
+import utils.PuzzleRunner;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
@@ -26,7 +26,7 @@ enum Tile {
     }
 }
 
-class Solver {
+class Solver implements ISolver {
     Grid<Tile> grid;
     ArrayList<Character> moves;
 
@@ -34,7 +34,7 @@ class Solver {
             '^', Dir.T, 'v', Dir.B, '<', Dir.L, '>', Dir.R
     );
 
-    void solve(ArrayList<String> lines) {
+    public void solve(ArrayList<String> lines) {
         ArrayList<String> mapInput = new ArrayList<>();
         int i = 0;
         while (!lines.get(i).isEmpty()) {
@@ -134,7 +134,7 @@ class Solver {
         var target1 = cell.getDir(dir);
         var target2 = otherPart.getDir(dir);
 
-        if(dir == Dir.T || dir == Dir.B){ // On bouge devant le premier morceau uniquement si déplacement vertical
+        if (dir == Dir.T || dir == Dir.B) { // On bouge devant le premier morceau uniquement si déplacement vertical
             moveP2(target1, dir);
         }
         moveP2(target2, dir);
@@ -150,19 +150,7 @@ class Solver {
 }
 
 public class Day15 {
-    public static void main(String[] args) throws IOException {
-        long startTime = System.currentTimeMillis();
-
-        String s;
-        BufferedReader reader = new BufferedReader(new FileReader("src\\_2024\\_15\\input.txt"));
-        ArrayList<String> lines = new ArrayList<>();
-        while ((s = reader.readLine()) != null) {
-            lines.add(s);
-        }
-        Solver solver = new Solver();
-        solver.solve(lines);
-
-        long estimatedTime = System.currentTimeMillis() - startTime;
-        System.out.println("Time elapsed : " + estimatedTime / 1000.0 + " s");
+    public static void main() throws IOException {
+        PuzzleRunner.Launch(2024, 15, new Solver());
     }
 }

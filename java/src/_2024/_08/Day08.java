@@ -1,17 +1,18 @@
 package _2024._08;
 
+import utils.ISolver;
+import utils.PuzzleRunner;
+
 import java.awt.*;
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-class Solver {
+class Solver implements ISolver {
     int nbLigne;
     int nbCol;
 
-    void solve(ArrayList<String> lines) {
+    public void solve(ArrayList<String> lines) {
         char[][] tab = new char[lines.size()][];
 
         for (int i = 0; i < lines.size(); i++) {
@@ -71,19 +72,7 @@ class Solver {
 }
 
 public class Day08 {
-    public static void main(String[] args) throws IOException {
-        long startTime = System.currentTimeMillis();
-
-        String s;
-        BufferedReader reader = new BufferedReader(new FileReader("src\\_2024\\_08\\input.txt"));
-        ArrayList<String> lines = new ArrayList<>();
-        while ((s = reader.readLine()) != null) {
-            lines.add(s);
-        }
-        Solver solver = new Solver();
-        solver.solve(lines);
-
-        long estimatedTime = System.currentTimeMillis() - startTime;
-        System.out.println("Time elapsed : " + estimatedTime / 1000.0 + " s");
+    public static void main() throws IOException {
+        PuzzleRunner.Launch(2024, 8, new Solver());
     }
 }

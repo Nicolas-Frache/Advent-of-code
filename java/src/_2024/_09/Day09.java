@@ -1,14 +1,14 @@
 package _2024._09;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
+import utils.ISolver;
+import utils.PuzzleRunner;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.stream.Collectors;
 
-class Solver {
-    void solve(ArrayList<String> lines) {
+class Solver implements ISolver {
+    public void solve(ArrayList<String> lines) {
         var array = Arrays.stream(lines.getFirst().split("")).mapToInt(Integer::parseInt).toArray();
         var len = Arrays.stream(array).sum();
 
@@ -81,24 +81,11 @@ class Solver {
     }
 }
 
-
 record Block(boolean isFile, int len, int fileNumber) {
 }
 
 public class Day09 {
-    public static void main(String[] args) throws IOException {
-        long startTime = System.currentTimeMillis();
-
-        String s;
-        BufferedReader reader = new BufferedReader(new FileReader("src\\_2024\\_09\\input.txt"));
-        ArrayList<String> lines = new ArrayList<>();
-        while ((s = reader.readLine()) != null) {
-            lines.add(s);
-        }
-        Solver solver = new Solver();
-        solver.solve(lines);
-
-        long estimatedTime = System.currentTimeMillis() - startTime;
-        System.out.println("Time elapsed : " + estimatedTime / 1000.0 + " s");
+    public static void main() throws IOException {
+        PuzzleRunner.Launch(2024, 9, new Solver());
     }
 }

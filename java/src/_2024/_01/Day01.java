@@ -1,13 +1,14 @@
 package _2024._01;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
+import utils.ISolver;
+import utils.PuzzleRunner;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Objects;
 
-class Solver {
-    void solve(ArrayList<String> lines) {
+class Solver implements ISolver {
+    public void solve(ArrayList<String> lines) {
         ArrayList<Integer> left = new ArrayList<>(), right = new ArrayList<>();
         for (String l : lines) {
             var x = l.split(" {3}");
@@ -33,21 +34,7 @@ class Solver {
 
 
 public class Day01 {
-    public static void main(String[] args) throws IOException {
-        long startTime = System.currentTimeMillis();
-
-        System.out.println(Day01.class.getClassLoader().getResource("").getPath());
-
-        String s;
-        BufferedReader reader = new BufferedReader(new FileReader("src\\_2024\\_01\\input.txt"));
-        ArrayList<String> lines = new ArrayList<>();
-        while ((s = reader.readLine()) != null) {
-            lines.add(s);
-        }
-        Solver solver = new Solver();
-        solver.solve(lines);
-
-        long estimatedTime = System.currentTimeMillis() - startTime;
-        System.out.println("Time elapsed : " + estimatedTime / 1000.0 + " s");
+    public static void main() throws IOException {
+        PuzzleRunner.Launch(2024, 1, new Solver());
     }
 }

@@ -1,22 +1,22 @@
 package _2024._17;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
+import utils.ISolver;
+import utils.PuzzleRunner;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.concurrent.Callable;
 import java.util.stream.Collectors;
 
 record Instruction(int opCode, int op) {
 }
 
-class Solver {
+class Solver implements ISolver {
     long A, B, C, instructionPointer;
     ArrayList<Instruction> instructions = new ArrayList<>();
     ArrayList<Long> output = new ArrayList<>();
 
-    void solve(ArrayList<String> lines) {
+    public void solve(ArrayList<String> lines) {
         A = Integer.parseInt(lines.get(0).split(": ")[1]);
         B = Integer.parseInt(lines.get(1).split(": ")[1]);
         C = Integer.parseInt(lines.get(2).split(": ")[1]);
@@ -134,19 +134,7 @@ class Solver {
 
 
 public class Day17 {
-    public static void main(String[] args) throws IOException {
-        long startTime = System.currentTimeMillis();
-
-        String s;
-        BufferedReader reader = new BufferedReader(new FileReader("src\\_2024\\_17\\input.txt"));
-        ArrayList<String> lines = new ArrayList<>();
-        while ((s = reader.readLine()) != null) {
-            lines.add(s);
-        }
-        Solver solver = new Solver();
-        solver.solve(lines);
-
-        long estimatedTime = System.currentTimeMillis() - startTime;
-        System.out.println("Time elapsed : " + estimatedTime / 1000.0 + " s");
+    public static void main() throws IOException {
+        PuzzleRunner.Launch(2024, 17, new Solver());
     }
 }
