@@ -39,7 +39,6 @@ class Solver implements ISolver {
             }
         }
         System.out.println(sum);
-
     }
 
     boolean isValidUpdate(ArrayList<Integer> update) {

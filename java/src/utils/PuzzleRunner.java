@@ -19,7 +19,11 @@ public class PuzzleRunner {
         while ((s = reader.readLine()) != null) {
             lines.add(s);
         }
-        solver.solve(lines);
+        try {
+            solver.solve(lines);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         long estimatedTime = System.currentTimeMillis() - startTime;
         System.out.println(ANSI_GREEN + "\n▶ Time elapsed : " + estimatedTime / 1000.0 + " s" + ANSI_RESET);
